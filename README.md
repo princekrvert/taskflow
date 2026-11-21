@@ -45,13 +45,15 @@ A fast, keyboard-driven CLI and TUI task manager built with **Go**, **Cobra**, *
 ### Option 1: Install via Go (Linux / macOS / Windows)
 
 ```bash
-go install [github.com/princekrvert/taskflow@latest](https://github.com/princekrvert/taskflow@latest)
+go install [github.com/princekrvert/taskflow@latest]
+https://github.com/princekrvert/taskflow@latest
 ```
 
 ### Option 2: Build from Source (Linux / macOS)
 
 ```bash
-git clone [https://github.com/princekrvert/taskflow.git](https://github.com/princekrvert/taskflow.git)
+git clone [https://github.com/princekrvert/taskflow.git]
+https://github.com/princekrvert/taskflow.git
 cd taskflow
 go build -o taskflow .
 sudo mv taskflow /usr/local/bin/
@@ -60,7 +62,8 @@ sudo mv taskflow /usr/local/bin/
 ### Option 3: Build from Source (Windows PowerShell)
 
 ```powershell
-git clone [https://github.com/princekrvert/taskflow.git](https://github.com/princekrvert/taskflow.git)
+git clone [https://github.com/princekrvert/taskflow.git]
+https://github.com/princekrvert/taskflow.git
 cd taskflow
 go build -o taskflow.exe .
 ```
@@ -73,7 +76,8 @@ Move `taskflow.exe` to a directory included in your system `PATH`.
 
 ```bash
 pkg update && pkg install golang git -y
-git clone [https://github.com/princekrvert/taskflow.git](https://github.com/princekrvert/taskflow.git)
+git clone [https://github.com/princekrvert/taskflow.git]
+https://github.com/princekrvert/taskflow.git
 cd taskflow
 go build -o $PREFIX/bin/taskflow .
 ```
