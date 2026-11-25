@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 	"time"
+
 	"github.com/princekrvert/taskflow/internal/models"
 	"github.com/princekrvert/taskflow/internal/repository"
 )
@@ -50,4 +51,40 @@ func (s *TaskService) GetDailyTasks(date string) ([]models.Task, error) {
 		date = time.Now().Format("2006-01-02")
 	}
 	return s.repo.ListByDate(date)
+}
+func (s *TaskService) isToday(t time.Time) bool {
+	return t.Local().Format("2006-01-02") == time.Now().Format("2006-01-02")
+}
+
+func (s *TaskService) DeleteTask(id int) error {
+	if id <= 0 {
+		return errors.New("invalid task ID")
+	}
+	task, err := s.repo.GetByID(id)
+	if err != nil {
+		return errors.New("task not found")
+	}
+	if !s.isToday(task.CreatedAt) {
+		return errors.New("locked: cannot delete tasks from previous days")
+	}
+	return s.repo.Delete(id)
+}
+
+func (s *TaskService) CompleteTask(id int) error {
+	if id <= 0 {
+		return errors.New("invalid task ID")
+	}
+	task, err := s.repo.GetByID(id)
+	if err != nil {
+		return errors.New("task not found")
+	}
+	if !s.isToday(task.CreatedAt) {
+		return errors.New("locked: cannot modify tasks from previous days")
+	}
+	return s.repo.MarkComplete(id)
+}
+
+func (s *TaskService) GetPreviousTasks() ([]models.Task, error) {
+	today := time.Now().Format("2006-01-02")
+	return s.repo.ListPrevious(today)
 }

@@ -12,8 +12,10 @@ type TaskRepository interface {
 	Create(title string) (int64, error)
 	Delete(id int) error
 	MarkComplete(id int) error
+	GetByID(id int) (*models.Task, error)
 	ListAll() ([]models.Task, error)
 	ListByDate(date string) ([]models.Task, error)
+	ListPrevious(today string) ([]models.Task, error)
 	GetMonthlyStats(month string) ([]models.MonthlyStat, error)
 }
 
@@ -120,6 +122,40 @@ func (r *SQLiteRepo) ListByDate(date string) ([]models.Task, error) {
 		ORDER BY completed ASC, id DESC`
 
 	rows, err := r.db.Query(query, date, date)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tasks []models.Task
+	for rows.Next() {
+		var t models.Task
+		if err := rows.Scan(&t.ID, &t.Title, &t.Completed, &t.CreatedAt, &t.CompletedAt); err != nil {
+			return nil, err
+		}
+		tasks = append(tasks, t)
+	}
+	return tasks, nil
+}
+func (r *SQLiteRepo) GetByID(id int) (*models.Task, error) {
+	var t models.Task
+	err := r.db.QueryRow(
+		`SELECT id, title, completed, created_at, completed_at FROM tasks WHERE id = ?`, id,
+	).Scan(&t.ID, &t.Title, &t.Completed, &t.CreatedAt, &t.CompletedAt)
+	if err != nil {
+		return nil, err
+	}
+	return &t, nil
+}
+
+func (r *SQLiteRepo) ListPrevious(today string) ([]models.Task, error) {
+	query := `
+		SELECT id, title, completed, created_at, completed_at
+		FROM tasks
+		WHERE date(created_at, 'localtime') < ?
+		ORDER BY created_at DESC, id DESC`
+
+	rows, err := r.db.Query(query, today)
 	if err != nil {
 		return nil, err
 	}
