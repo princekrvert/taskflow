@@ -6,13 +6,15 @@ import (
 	"path/filepath"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/spf13/cobra"
 	"github.com/princekrvert/taskflow/internal/repository"
 	"github.com/princekrvert/taskflow/internal/service"
 	"github.com/princekrvert/taskflow/internal/ui"
+	"github.com/spf13/cobra"
 )
 
 var taskSvc *service.TaskService
+
+const Version = "v1.0.0"
 
 var rootCmd = &cobra.Command{
 	Use:   "taskflow",
